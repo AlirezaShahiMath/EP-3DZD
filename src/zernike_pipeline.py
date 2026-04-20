@@ -1,18 +1,32 @@
+"""
+Main EP-3DZD feature extraction pipeline.
+"""
+
 import numpy as np
 from pathlib import Path
+from tqdm import tqdm
 
+def dummy_zernike_vector(size=100):
+    """Placeholder until external binaries are integrated"""
+    return np.random.rand(size).astype(np.float32)
 
-def compute_feature_vector(pair_dir):
-    pdb_files = list(Path(pair_dir).glob("*.pdb"))
+def process_single_complex(pdbid):
+    """
+    Replace this with your real pipeline.
+    """
+    return dummy_zernike_vector()
 
-    if len(pdb_files) == 0:
-        return None
+def process_dataset(base_dir, num_complexes=10):
+    base_dir = Path(base_dir)
+    pdbids = sorted([p.name for p in base_dir.iterdir() if p.is_dir()])
 
-    # Dummy Zernike features (replace with your executable pipeline)
-    features = []
+    pdbids = pdbids[:num_complexes]
 
-    for f in pdb_files:
-        vec = np.random.rand(50)  # placeholder
-        features.extend(vec)
+    features = {}
 
-    return np.array(features, dtype=np.float32)
+    for pdbid in tqdm(pdbids, desc="Processing"):
+        feat = process_single_complex(pdbid)
+        if feat is not None:
+            features[pdbid] = feat
+
+    return features
